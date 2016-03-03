@@ -1,0 +1,223 @@
+﻿<Metro:MetroWindow x:Class="AnthrocityChat.Pages.Window_ContactChat"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AnthrocityChat.Pages"
+        mc:Ignorable="d" Height="600" Width="295" BorderBrush="#FF0097FF" Loaded="Window_Loaded" WindowTitleBrush="#FF0097FF" Icon="/AnthrocityChat;component/Assets/Images/ico_AC.ico">
+    <!-- 380-->
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <!-- Accent and AppTheme setting -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Button.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <DataTemplate x:Key="Carte_Contact">
+                <Border Background="{Binding Color_Background}" CornerRadius="3">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="32,15,0,0" Background="White">
+                            <Ellipse Fill="{Binding Color_Status}" Width="8" Height="8" Margin="45,0,0,0"/>
+                            <TextBlock x:Name="status_text" Text="{Binding Status_Type}" FontFamily="Segoe UI Light" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10.667" Foreground="{Binding Color_Status}" Margin="5,0,0,0" />
+                        </StackPanel>
+
+                        <Ellipse Width="40" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Fill="White" Visibility="{Binding elipse_white_visibility}">
+                            <Ellipse.Effect>
+                                <DropShadowEffect RenderingBias="Quality" Direction="0" BlurRadius="10" ShadowDepth="0"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+                        <Ellipse x:Name="elipse_profil" Width="40" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,5,0,5">
+                            <Ellipse.Fill>
+                                <ImageBrush x:Name="profile_image_elipse" ImageSource="{Binding image_profil}" />
+                            </Ellipse.Fill>
+                            <Ellipse.Effect>
+                                <DropShadowEffect RenderingBias="Quality" Direction="0" BlurRadius="10" ShadowDepth="0"/>
+                            </Ellipse.Effect>
+                        </Ellipse>
+                        
+                        <TextBlock x:Name="nickname_block" Text="{Binding Nickname}" FontFamily="/AnthrocityChat;component/Assets/#Lovelo Black" HorizontalAlignment="Left" VerticalAlignment="Center"  FontSize="16" Foreground="White" Margin="50,0,0,15"/>
+                    </Grid>
+                </Border>
+            </DataTemplate>
+            
+            <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+            <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+            <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+            <Style x:Key="MP_Textbox" TargetType="{x:Type TextBox}">
+                <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+                <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                <Setter Property="AllowDrop" Value="true"/>
+                <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+                <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TextBox}">
+                            <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsEnabled" Value="false">
+                                    <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                                </Trigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+                <Style.Triggers>
+                    <MultiTrigger>
+                        <MultiTrigger.Conditions>
+                            <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                            <Condition Property="IsSelectionActive" Value="false"/>
+                        </MultiTrigger.Conditions>
+                        <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                    </MultiTrigger>
+                </Style.Triggers>
+            </Style>
+            <DataTemplate x:Key="ItemChat">
+                <Grid VerticalAlignment="Stretch">
+                    <StackPanel>
+                        <Border Background="{Binding color_bg}" CornerRadius="3" Margin="{Binding margin}" HorizontalAlignment="{Binding align_message}">
+                            <TextBox x:Name="comment_view_box" BorderBrush="{x:Null}" AcceptsReturn="True" Background="{x:Null}" IsEnabled="True" IsReadOnly="True" Padding="20,0,20,0" TextWrapping="Wrap" FontSize="16" Margin="0,10" Style="{StaticResource MP_Textbox}" Foreground="White" Text="{Binding message}"/>
+                        </Border>
+                        <TextBlock Text="{Binding date}" FontFamily="Segoe UI Light" HorizontalAlignment="{Binding align_message}" FontSize="13.333" Foreground="Black" Margin="5,0,0,0" />
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Metro:MetroWindow.RightWindowCommands>
+        <Metro:WindowCommands>
+            <Button x:Name="button_settings" Content="&#xE713;" FontFamily="/AnthrocityChat;component/Assets/#Segoe MDL2 Assets" Foreground="White" BorderBrush="{x:Null}" FontSize="16" Click="button_settings_Click" />
+            <Button x:Name="button_shutdown" Content="&#xE7E8;" FontFamily="/AnthrocityChat;component/Assets/#Segoe MDL2 Assets" Foreground="White" BorderBrush="{x:Null}" FontSize="16" Click="button_shutdown_Click" />
+        </Metro:WindowCommands>
+    </Metro:MetroWindow.RightWindowCommands>
+
+    <Grid Background="White">
+
+        <Grid x:Name="grid_conv" Margin="300,0,0,0" Visibility="Collapsed">
+            <ListView x:Name="chat_listview" Padding="0,0,0,55" BorderBrush="{x:Null}" ItemTemplate="{StaticResource ItemChat}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Hidden" SourceUpdated="chat_listview_SourceUpdated">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        <Setter x:Name="ItemLarge" Property="Margin" Value="0,10,0,0"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+
+            <Border Background="#990FA831" CornerRadius="3" Margin="10,0,10,10" VerticalAlignment="Bottom">
+                <TextBox x:Name="box_send" BorderBrush="{x:Null}" AcceptsReturn="False" Background="{x:Null}" IsEnabled="True" Padding="20,0,30,0" TextWrapping="Wrap" FontSize="16" Margin="0,10" Style="{StaticResource MP_Textbox}" Foreground="White" KeyDown="box_send_KeyDown" TextChanged="box_send_TextChanged">
+
+                </TextBox>
+            </Border>
+            <Button x:Name="Send_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        Margin="352,529,0,0" IsEnabled="False"
+                        ToolTip="Envoyer le message" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="Send_Button_Click">
+                <materialDesign:PackIcon Kind="Send" Height="24" Width="24" />
+            </Button>
+        </Grid>
+
+        <Grid Width="300" HorizontalAlignment="Left">
+            <Grid.Effect>
+                <DropShadowEffect RenderingBias="Quality" Direction="0" BlurRadius="10" ShadowDepth="0"/>
+            </Grid.Effect>
+            <Grid Background="#FF0097FF" Height="80" VerticalAlignment="Top">
+                
+                <StackPanel x:Name="Stackpanel_Status" HorizontalAlignment="Left" Margin="51,42,0,0" VerticalAlignment="Top" Orientation="Horizontal" Background="White" MouseEnter="Stackpanel_Status_MouseEnter" MouseLeave="Stackpanel_Status_MouseLeave" MouseLeftButtonDown="Stackpanel_Status_MouseLeftButtonDown">
+                        <Ellipse x:Name="ellipse_status" Fill="#FF008900" Width="10" Height="10" Margin="45,0,0,0"/>
+                        <TextBlock x:Name="status_text" Text="Disponible" FontFamily="Segoe UI Light" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13.333" Foreground="#FF008900" Margin="5,0,0,0" />
+                        <TextBlock Text="&#xE011;" FontFamily="/AnthrocityChat;component/Assets/#Segoe MDL2 Assets" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="10.667" Foreground="#FF0097FF" Margin="5,0,3,0" />
+                </StackPanel>
+
+                    <Ellipse Width="70" Height="70" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Fill="White">
+                    <Ellipse.Effect>
+                        <DropShadowEffect RenderingBias="Quality" Direction="0" BlurRadius="10" ShadowDepth="0"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+                <Ellipse x:Name="elipse_profil" Width="70" Height="70" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0" Loaded="elipse_profil_Loaded">
+                    <Ellipse.Fill>
+                        <ImageBrush x:Name="profile_image_elipse" />
+                    </Ellipse.Fill>
+                    <Ellipse.Effect>
+                        <DropShadowEffect RenderingBias="Quality" Direction="0" BlurRadius="10" ShadowDepth="0"/>
+                    </Ellipse.Effect>
+                </Ellipse>
+
+                <TextBlock x:Name="nickname_block" Text="Nickname" FontFamily="/AnthrocityChat;component/Assets/#Lovelo Black" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="94,17,0,35" FontSize="21.333" Foreground="White"/>
+            </Grid>
+
+            <Grid Margin="0,80,0,0" Background="White">
+                <StackPanel Orientation="Horizontal" Margin="-10,0,0,-15" HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                    <TextBlock x:Name="icon_chat" Text="" FontFamily="/AnthrocityChat;component/Assets/#Segoe MDL2 Assets"  FontSize="96" Foreground="#99004A7F" />
+                    <TextBlock Text="AC"  FontSize="73.333" Foreground="#99004A7F" Margin="5,0,0,0" VerticalAlignment="Top" FontFamily="/AnthrocityChat;component/Assets/#Lovelo Black" />
+                </StackPanel>
+
+                <ListView x:Name="contact_list"  BorderBrush="{x:Null}" ItemTemplate="{DynamicResource Carte_Contact}" Background="{x:Null}" SelectionChanged="contact_list_SelectionChanged">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter x:Name="ItemLarge" Property="Margin" Value="10,10,10,0"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                </ListView>
+            </Grid>
+
+            <StackPanel x:Name="menu_status" HorizontalAlignment="Left" Margin="96,60,0,0" VerticalAlignment="Top" Visibility="Collapsed" Background="#CC000000" Width="93">
+                <StackPanel x:Name="Button_Available" Orientation="Horizontal" MouseLeftButtonDown="Button_Available_MouseLeftButtonDown">
+                    <Ellipse Fill="#FF008900" Width="10" Height="10"/>
+                    <TextBlock Text="Disponible" FontFamily="Segoe UI Light" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13.333" Foreground="#FF008900" Margin="5,0,0,0" />
+                </StackPanel>
+                <StackPanel x:Name="Button_Absent" Orientation="Horizontal" MouseLeftButtonDown="Button_Absent_MouseLeftButtonDown">
+                    <Ellipse Fill="#FFFF9800" Width="10" Height="10"/>
+                    <TextBlock Text="Absent" FontFamily="Segoe UI Light" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13.333" Foreground="#FFFF9800" Margin="5,0,0,0" />
+                </StackPanel>
+                <StackPanel x:Name="Button_Occupe" Orientation="Horizontal" MouseLeftButtonDown="Button_Occupe_MouseLeftButtonDown">
+                    <Ellipse Fill="#FFFF5722" Width="10" Height="10"/>
+                    <TextBlock Text="Occupé" FontFamily="Segoe UI Light" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="13.333" Foreground="#FFFF5722" Margin="5,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+
+        <Metro:FlyoutsControl Visibility="Visible">
+            <Metro:Flyout x:Name="show_settings" Header="Paramètres" Position="Right" Width="295" Background="#FF0097FF" Foreground="White" IsOpen="False">
+                <StackPanel>
+                    <Metro:ToggleSwitch x:Name="StartupLaunch_Switch" Loaded="StartupLaunch_Switch_Loaded" Header="Démarrer automatiquement au démarrage de Windows ?" Foreground="White" ThumbIndicatorBrush="Gray" OnLabel="Oui" OffLabel="Non" OffSwitchBrush="#FFF44336" ThumbIndicatorDisabledBrush="White" OnSwitchBrush="#FF4CAF50" Unchecked="StartupLaunch_Switch_Unchecked" Checked="StartupLaunch_Switch_Checked"/>
+                    
+                    <TextBlock Text="Développer par Yoshi_Gris" HorizontalAlignment="Center" FontSize="18.667" Margin="0,15,0,0"/>
+                    <TextBlock Text="Version 0.1 - 2016" HorizontalAlignment="Center" FontSize="13.333" TextDecorations="Underline"/>
+
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
+                        <Button x:Name="Twitter_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        IsEnabled="True"
+                        ToolTip="Me suivre sur Twitter"  Click="Twitter_Button_Click" Background="White" BorderBrush="{x:Null}" Foreground="#FF0097FF">
+                            <materialDesign:PackIcon Kind="Twitter" Height="24" Width="24" />
+                        </Button>
+
+                        <Button x:Name="Github_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
+                        IsEnabled="False"
+                        ToolTip="Voir les sources du projet"  Click="Twitter_Button_Click" Background="White" BorderBrush="{x:Null}" Foreground="#FF0097FF" Margin="5,0,0,0">
+                            <materialDesign:PackIcon Kind="GithubCircle" Height="24" Width="24" />
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+                    
+            </Metro:Flyout>
+        </Metro:FlyoutsControl>
+        
+    </Grid>
+</Metro:MetroWindow>

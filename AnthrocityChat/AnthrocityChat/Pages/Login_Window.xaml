@@ -1,0 +1,43 @@
+﻿<Metro:MetroWindow x:Class="AnthrocityChat.Pages.Login_Window"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:local="clr-namespace:AnthrocityChat.Pages"
+        mc:Ignorable="d"
+        Title="Anthrocity Login" Height="250" Width="300" Foreground="White" TitleForeground="White" WindowTitleBrush="#FF0097FF" NonActiveWindowTitleBrush="{x:Null}" BorderBrush="#FF0097FF" NonActiveBorderBrush="{x:Null}" NonActiveGlowBrush="{x:Null}" ResizeMode="NoResize" Icon="/AnthrocityChat;component/Assets/Images/ico_AC.ico" ShowIconOnTitleBar="True">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- MahApps.Metro resource dictionaries. Make sure that all file names are Case Sensitive! -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
+                <!-- Accent and AppTheme setting -->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    
+    <Grid Background="White">
+        <StackPanel VerticalAlignment="Top">
+            <TextBlock Text="Anthrocity Chat" Foreground="#FF0D619B" HorizontalAlignment="Center" FontFamily="/AnthrocityChat;component/Assets/#Lovelo Black" FontSize="29.333" Margin="0,0,0,10"/>
+            <TextBox x:Name="Username_Box" Metro:TextBoxHelper.Watermark="Nom d'utilisateur (e-mail)" Metro:TextBoxHelper.ClearTextButton="True" Background="#FF0097FF" BorderBrush="#FF0097FF" Height="20" Foreground="White"/>
+            <PasswordBox x:Name="MDP_Box" Metro:PasswordBoxHelper.CapsLockIcon="Caps Lock !" Metro:TextBoxHelper.Watermark="Mot de passe" Height="20" Margin="0,10,0,0" Background="#FF0097FF" BorderBrush="#FF0097FF" Foreground="White"/>
+            <Metro:ToggleSwitch x:Name="AutoConnect_Switch" Header="Se connecter automatiquement ?" Foreground="#FF315974" ThumbIndicatorBrush="#FF0D619B" OnLabel="Oui !" OffLabel="Nope"/>
+        </StackPanel>
+
+        <Button x:Name="login_button" VerticalAlignment="Bottom" Background="#FF0097FF" BorderBrush="#FF0097FF" Style="{StaticResource AccentedSquareButtonStyle}" Content="Je me connecte !" Click="login_button_Click" Loaded="login_button_Loaded"/>
+
+        <Grid x:Name="grid_connect" Background="#99000000" Visibility="Collapsed">
+            <StackPanel VerticalAlignment="Center">
+                <Metro:ProgressRing x:Name="ring_connect" IsActive="False" Foreground="#CCFFFFFF" />
+                <TextBlock x:Name="Text_Connect" Text="Connection..." Foreground="White" HorizontalAlignment="Center" FontFamily="/AnthrocityChat;component/Assets/#Lovelo Black" FontSize="16" Margin="0,10,0,0"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+    
+</Metro:MetroWindow>

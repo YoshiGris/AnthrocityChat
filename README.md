@@ -1,6 +1,7 @@
 # Anthrocity Chat
 
 Cette application est un client XMPP pour le chat du site https://www.anthrocity.net/
+
 Elle utilise la librairie agsXMPP.
 
 # Comment ouvrir le projet ?

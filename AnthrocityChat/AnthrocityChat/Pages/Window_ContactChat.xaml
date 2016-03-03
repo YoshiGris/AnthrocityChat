@@ -199,7 +199,7 @@
                     <Metro:ToggleSwitch x:Name="StartupLaunch_Switch" Loaded="StartupLaunch_Switch_Loaded" Header="Démarrer automatiquement au démarrage de Windows ?" Foreground="White" ThumbIndicatorBrush="Gray" OnLabel="Oui" OffLabel="Non" OffSwitchBrush="#FFF44336" ThumbIndicatorDisabledBrush="White" OnSwitchBrush="#FF4CAF50" Unchecked="StartupLaunch_Switch_Unchecked" Checked="StartupLaunch_Switch_Checked"/>
                     
                     <TextBlock Text="Développer par Yoshi_Gris" HorizontalAlignment="Center" FontSize="18.667" Margin="0,15,0,0"/>
-                    <TextBlock Text="Version 0.1 - 2016" HorizontalAlignment="Center" FontSize="13.333" TextDecorations="Underline"/>
+                    <TextBlock Text="Version 0.1.1 - 2016" HorizontalAlignment="Center" FontSize="13.333" TextDecorations="Underline"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                         <Button x:Name="Twitter_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"

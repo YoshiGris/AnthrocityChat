@@ -27,7 +27,7 @@
             <TextBlock Text="Anthrocity Chat" Foreground="#FF0D619B" HorizontalAlignment="Center" FontFamily="/AnthrocityChat;component/Assets/#Lovelo Black" FontSize="29.333" Margin="0,0,0,10"/>
             <TextBox x:Name="Username_Box" Metro:TextBoxHelper.Watermark="Nom d'utilisateur (e-mail)" Metro:TextBoxHelper.ClearTextButton="True" Background="#FF0097FF" BorderBrush="#FF0097FF" Height="20" Foreground="White"/>
             <PasswordBox x:Name="MDP_Box" Metro:PasswordBoxHelper.CapsLockIcon="Caps Lock !" Metro:TextBoxHelper.Watermark="Mot de passe" Height="20" Margin="0,10,0,0" Background="#FF0097FF" BorderBrush="#FF0097FF" Foreground="White"/>
-            <Metro:ToggleSwitch x:Name="AutoConnect_Switch" Header="Se connecter automatiquement ?" Foreground="#FF315974" ThumbIndicatorBrush="#FF0D619B" OnLabel="Oui !" OffLabel="Nope"/>
+            <Metro:ToggleSwitch x:Name="AutoConnect_Switch" Header="Se connecter automatiquement ?" Foreground="#FF315974" ThumbIndicatorBrush="#FF0D619B" OnLabel="Oui" OffLabel="Non"/>
         </StackPanel>
 
         <Button x:Name="login_button" VerticalAlignment="Bottom" Background="#FF0097FF" BorderBrush="#FF0097FF" Style="{StaticResource AccentedSquareButtonStyle}" Content="Je me connecte !" Click="login_button_Click" Loaded="login_button_Loaded"/>

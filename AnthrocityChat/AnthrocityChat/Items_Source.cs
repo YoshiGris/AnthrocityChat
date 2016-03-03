@@ -32,6 +32,7 @@ namespace AnthrocityChat
             public Visibility elipse_white_visibility { get; set; }
 
             public Brush Color_Background { get; set; }
+            public bool can_chat { get; set; }
         }
 
         public class Message_Conv

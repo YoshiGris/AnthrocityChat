@@ -72,12 +72,11 @@ namespace AnthrocityChat.Pages
 
         private void Contact(object sender, RosterItem item)
         {
-            
-            /*Dispatcher.Invoke(new Action(() =>
+            Dispatcher.Invoke(new Action(() =>
             {
-                contact_list.Items.Add(new Items_Source.Carte_Contact { Nickname = item.GetAttribute("name"), Status_Type = "Non disponible", Color_Status = new SolidColorBrush(Colors.Red) });
-            }), DispatcherPriority.Background);*/
-            //MessageBox.Show(item.Name);
+                variables.Xmpp.MessageGrabber.Add(new Jid(item.Jid), new BareJidComparer(), new MessageCB(MessageCallBack), null);
+                //contact_list.Items.Add(new Items_Source.Carte_Contact { Nickname = item.Name, Status_Type = "test", Color_Status = new SolidColorBrush(Colors.DarkGreen), list_conv = new ObservableCollection<Items_Source.Message_Conv>(), elipse_white_visibility = Visibility.Visible, Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080")) });
+            }), DispatcherPriority.Background);
         }
 
         //Envoie au serveur XMPP que notre body is ready pour recevoir les contacts/messages ! 
@@ -121,20 +120,27 @@ namespace AnthrocityChat.Pages
                             create_or_not = false;
                             if (item.status_jabber != pres.Show.ToString()) //S'il a été déjà rajouté dans la liste, alors on met à jour son statut !
                             {
+                                if(!item.can_chat)
+                                {
+                                    item.list_conv.Add(new Items_Source.Message_Conv { message = "- Le furs est là ! :) -", align_message = HorizontalAlignment.Center, margin = new Thickness(20, 0, 20, 0), color_bg = new SolidColorBrush(Colors.DarkGreen), date = DateTime.Now.ToString() });
+                                    if (pres.From.User == actual_profil.Nickname)
+                                    { box_send.IsEnabled = true; }
+                                }
+
                                 switch (pres.Show.ToString())
                                 {
                                     case "NONE":
-                                        item.Status_Type = "Disponible"; item.status_jabber = "NONE";
+                                        item.Status_Type = "Disponible"; item.jid_user = pres.From; item.status_jabber = "NONE"; item.can_chat = true;
                                         item.Color_Status = new SolidColorBrush(Colors.DarkGreen);
                                         break;
 
                                     case "dnd":
-                                        item.Status_Type = "Occupé"; item.status_jabber = "dnd";
+                                        item.Status_Type = "Occupé"; item.jid_user = pres.From; item.status_jabber = "dnd"; item.can_chat = true;
                                         item.Color_Status = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF5722"));
                                         break;
 
                                     case "away":
-                                        item.Status_Type = "Absent"; item.status_jabber = "away";
+                                        item.Status_Type = "Absent"; item.jid_user = pres.From; item.status_jabber = "away"; item.can_chat = true;
                                         item.Color_Status = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF9800"));
                                         break;
                                 }
@@ -163,8 +169,7 @@ namespace AnthrocityChat.Pages
                                 brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF9800"));
                                 break;
                         }
-                        contact_list.Items.Add(new Items_Source.Carte_Contact { Nickname = pres.From.User, Status_Type = type_status, Color_Status = brush, jid_user = pres.From, list_conv = new ObservableCollection<Items_Source.Message_Conv>(), elipse_white_visibility = Visibility.Visible, Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080")), status_jabber = status_jabber });
-                        variables.Xmpp.MessageGrabber.Add(new Jid(pres.From), new BareJidComparer(), new MessageCB(MessageCallBack), null);
+                        contact_list.Items.Add(new Items_Source.Carte_Contact { Nickname = pres.From.User, Status_Type = type_status, Color_Status = brush, jid_user = pres.From, list_conv = new ObservableCollection<Items_Source.Message_Conv>(), elipse_white_visibility = Visibility.Visible, Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080")), status_jabber = status_jabber, can_chat = true });
                         GetPhoto(pres.From);
                     }
 
@@ -177,13 +182,14 @@ namespace AnthrocityChat.Pages
                         {
                             if(pres.From.User == actual_profil.Nickname) //Si on a été en discussion avec la personne et qu'elle s'est déconnecté, alors on avertit l'utilisateur
                             {
-                                item.list_conv.Add(new Items_Source.Message_Conv { message = "- Le furs s'est déconnecté :( -", align_message = HorizontalAlignment.Center, margin = new Thickness(20, 0, 20, 0), color_bg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99FF0000")) });
+                                item.list_conv.Add(new Items_Source.Message_Conv { message = "- Le furs s'est déconnecté :( -", align_message = HorizontalAlignment.Center, margin = new Thickness(20, 0, 20, 0), color_bg = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99FF0000")), date = DateTime.Now.ToString() });
                                 box_send.IsEnabled = false;
                             }
 
-                            contact_list.Items.Remove(item);
-                            variables.Xmpp.MessageGrabber.Remove(new Jid(pres.From));
-                            variables.Dico_Images_Profil.Remove(pres.From);
+                            item.Status_Type = "Déconnecté"; item.status_jabber = "nope"; item.can_chat = false;
+                            item.Color_Status = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFD32F2F"));
+                            contact_list.Items.Refresh();
+                            //contact_list.Items.Remove(item);
                             break;
                         }
                     }
@@ -198,8 +204,13 @@ namespace AnthrocityChat.Pages
             if(contact_list.SelectedItem != null)
             {
                 Items_Source.Carte_Contact publicitem = (sender as ListView).SelectedItem as Items_Source.Carte_Contact; grid_conv.Visibility = Visibility.Visible;
-                actual_profil = publicitem; actual_profil.Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080")); box_send.IsEnabled = true;
+                actual_profil = publicitem; actual_profil.Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080"));
                 variables.JID_Talk = publicitem.jid_user; chat_listview.DataContext = this; chat_listview.ItemsSource = actual_profil.list_conv; chat_listview.Items.Refresh(); contact_list.Items.Refresh();
+
+                if (!publicitem.can_chat)
+                    box_send.IsEnabled = false;
+                else
+                    box_send.IsEnabled = true;
 
                 if(chat_listview.Items.Count > 0)
                     chat_listview.ScrollIntoView(chat_listview.Items[chat_listview.Items.Count - 1]);
@@ -296,9 +307,6 @@ namespace AnthrocityChat.Pages
                     {
                         //Ici, on parse pour avoir l'URL de l'avatar de l'utilisateur
                         string image = htmlDocument_account.DocumentNode.DescendantsAndSelf("a").FirstOrDefault(o => o.GetAttributeValue("href", "").Contains("https://www.anthrocity.net/photo/album/profile/")).Descendants("img").FirstOrDefault().Attributes["data-src"].Value;
-
-                        if(!variables.Dico_Images_Profil.ContainsKey(jid.User)) //Ensuite, on le rajoute dans le dictionnaire des images de profil (utilité: pour les notifications)
-                            variables.Dico_Images_Profil.Add(jid.User, new System.Uri(image, UriKind.Absolute));
 
                         item.image_profil = new System.Uri(image, UriKind.Absolute); //On met l'image de profil à l'item
 

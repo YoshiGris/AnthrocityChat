@@ -209,8 +209,8 @@
                         </Button>
 
                         <Button x:Name="Github_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
-                        IsEnabled="False"
-                        ToolTip="Voir les sources du projet"  Click="Twitter_Button_Click" Background="White" BorderBrush="{x:Null}" Foreground="#FF0097FF" Margin="5,0,0,0">
+                        IsEnabled="True"
+                        ToolTip="Voir les sources du projet"  Click="Github_Button_Click" Background="White" BorderBrush="{x:Null}" Foreground="#FF0097FF" Margin="5,0,0,0">
                             <materialDesign:PackIcon Kind="GithubCircle" Height="24" Width="24" />
                         </Button>
                     </StackPanel>

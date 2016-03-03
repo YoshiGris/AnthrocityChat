@@ -427,5 +427,8 @@ namespace AnthrocityChat.Pages
             variables.Xmpp.SendMyPresence(); status_text.Text = "Absent"; status_text.Foreground = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF9800")); ellipse_status.Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF9800"));
             menu_status.Visibility = Visibility.Collapsed;
         }
+
+        private void Github_Button_Click(object sender, RoutedEventArgs e)
+        { System.Diagnostics.Process.Start("https://github.com/YoshiGris/AnthrocityChat"); }
     }
 }

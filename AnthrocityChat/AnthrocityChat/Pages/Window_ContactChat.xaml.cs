@@ -247,9 +247,6 @@ namespace AnthrocityChat.Pages
                                     { new Notification_Window(msg.From.User, msg.Body, new BitmapImage(item.image_profil)).Show(); }
                                 }
 
-                                if(chat_listview.Items.Count != 0) //Si le nombre de messages dans la liste des messages n'est pas égal à 0, alors la liste fait un focus sur le dernier message !
-                                    chat_listview.ScrollIntoView(chat_listview.Items[chat_listview.Items.Count - 1]);
-
                             }
                             break;
                         }
@@ -257,6 +254,11 @@ namespace AnthrocityChat.Pages
 
                     contact_list.Items.Refresh(); //On met à jour les vues
                     chat_listview.Items.Refresh();
+
+
+                    if (chat_listview.Items.Count != 0) //Si le nombre de messages dans la liste des messages n'est pas égal à 0, alors la liste fait un focus sur le dernier message !
+                        chat_listview.ScrollIntoView(chat_listview.Items[chat_listview.Items.Count - 1]);
+
                 }), DispatcherPriority.Background);
 
             }

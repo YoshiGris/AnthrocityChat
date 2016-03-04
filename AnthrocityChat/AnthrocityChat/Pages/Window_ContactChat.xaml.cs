@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using System.Net.Http;
 using HtmlAgilityPack;
 using Microsoft.Win32;
+using agsXMPP.protocol.extensions.chatstates;
+using System.Net.NetworkInformation;
 
 namespace AnthrocityChat.Pages
 {
@@ -25,7 +27,7 @@ namespace AnthrocityChat.Pages
     {
         GlobalVariables variables = new GlobalVariables(); XmppClientConnection xmpp = new XmppClientConnection();
         Dictionary<string, int> item_username = new Dictionary<string, int>(); Items_Source.Carte_Contact actual_profil = new Items_Source.Carte_Contact();
-        System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon(); bool force_shutdown = false;
+        System.Windows.Forms.NotifyIcon nIcon = new System.Windows.Forms.NotifyIcon(); bool force_shutdown = false; bool disconnected = false;
 
         //Cette clé de registre permet d'enregistrer l'application au démarrage de Windows
         RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
@@ -35,7 +37,21 @@ namespace AnthrocityChat.Pages
             InitializeComponent();
             Application.Current.MainWindow = this;
             Closing += Window_ContactChat_Closing;
+            NetworkChange.NetworkAvailabilityChanged += myNetworkAvailabilityChangeHandler;
             nIcon.Click += NIcon_Click;
+        }
+
+        private void myNetworkAvailabilityChangeHandler(object sender, NetworkAvailabilityEventArgs e)
+        {
+            if(!e.IsAvailable)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    contact_list.Items.Clear();
+                    variables.Xmpp.Open();
+                    disconnected = true;
+                }), DispatcherPriority.Background);
+            }
         }
 
         private void NIcon_Click(object sender, EventArgs e)
@@ -92,12 +108,72 @@ namespace AnthrocityChat.Pages
             variables.Xmpp.OnRosterEnd += new ObjectHandler(Finish_GetContacts);
             variables.Xmpp.OnPresence += new PresenceHandler(xmpp_OnPresence);
             variables.Xmpp.OnRosterEnd += new ObjectHandler(Get_End);
+            variables.Xmpp.OnMessage += Xmpp_OnMessage;
+            variables.Xmpp.OnXmppConnectionStateChanged += Xmpp_OnXmppConnectionStateChanged;
 
             try
             { variables.Xmpp.Open(); }
             catch (Exception ex)
             { MessageBox.Show(ex.Message); }
 
+        }
+
+        private void Xmpp_OnXmppConnectionStateChanged(object sender, XmppConnectionState state)
+        {
+            if(disconnected)
+            {
+                Dispatcher.Invoke(new Action(() =>
+                {
+                    if (disconnected && state == XmppConnectionState.Disconnected)
+                        variables.Xmpp.Open();
+
+                    if (state == XmppConnectionState.SessionStarted)
+                        disconnected = false;
+
+                }), DispatcherPriority.Background);
+
+            }
+        }
+
+        //Cette fonction permet de savoir si un des utilisateurs est en train d'écrire un message ou non
+        private void Xmpp_OnMessage(object sender, Message msg)
+        {
+            Dispatcher.Invoke(new Action(() =>
+            {
+                if (msg.From.User == actual_profil.Nickname)
+                {
+                    switch(msg.Chatstate.ToString())
+                    {
+                        case "active":
+                            IsTyping_Text.Visibility = Visibility.Collapsed;
+                            break;
+
+                        case "composing":
+                            IsTyping_Text.Visibility = Visibility.Visible; IsTyping_Text.Text = msg.From.User + " est en train d'écrire...";
+                            break;
+                    }
+
+                }
+
+                foreach (Items_Source.Carte_Contact item in contact_list.Items)
+                {
+                    if (item.Nickname == msg.From.User)
+                    {
+                        switch (msg.Chatstate.ToString())
+                        {
+                            case "active":
+                                item.is_typing = false;
+                                break;
+
+                            case "composing":
+                                item.is_typing = true;
+                                break;
+                        }
+                        break;
+                    }
+                }
+
+            }), DispatcherPriority.Background);
         }
 
         //Après avoir reçu les contacts, le logiciel dit au serveur qu'il est présent !
@@ -169,7 +245,7 @@ namespace AnthrocityChat.Pages
                                 brush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFF9800"));
                                 break;
                         }
-                        contact_list.Items.Add(new Items_Source.Carte_Contact { Nickname = pres.From.User, Status_Type = type_status, Color_Status = brush, jid_user = pres.From, list_conv = new ObservableCollection<Items_Source.Message_Conv>(), elipse_white_visibility = Visibility.Visible, Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080")), status_jabber = status_jabber, can_chat = true });
+                        contact_list.Items.Add(new Items_Source.Carte_Contact { Nickname = pres.From.User, Status_Type = type_status, Color_Status = brush, jid_user = pres.From, list_conv = new ObservableCollection<Items_Source.Message_Conv>(), elipse_white_visibility = Visibility.Visible, Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080")), status_jabber = status_jabber, can_chat = true, is_typing = false, text_pause = "" });
                         GetPhoto(pres.From);
                     }
 
@@ -203,9 +279,16 @@ namespace AnthrocityChat.Pages
         {
             if(contact_list.SelectedItem != null)
             {
+                actual_profil.text_pause = box_send.Text; box_send.Text = "";
                 Items_Source.Carte_Contact publicitem = (sender as ListView).SelectedItem as Items_Source.Carte_Contact; grid_conv.Visibility = Visibility.Visible;
                 actual_profil = publicitem; actual_profil.Color_Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#99808080"));
                 variables.JID_Talk = publicitem.jid_user; chat_listview.DataContext = this; chat_listview.ItemsSource = actual_profil.list_conv; chat_listview.Items.Refresh(); contact_list.Items.Refresh();
+                box_send.Text = publicitem.text_pause;
+
+                if (publicitem.is_typing)
+                { IsTyping_Text.Visibility = Visibility.Visible; IsTyping_Text.Text = publicitem.Nickname + " est en train d'écrire..."; }
+                else
+                { IsTyping_Text.Visibility = Visibility.Collapsed; }
 
                 if (!publicitem.can_chat)
                     box_send.IsEnabled = false;
@@ -351,9 +434,15 @@ namespace AnthrocityChat.Pages
         {
             //Si le texte est nul, alors il désactive le bouton "envoyer"
             if (box_send.Text != "")
+            {
                 Send_Button.IsEnabled = true;
+                variables.Xmpp.Send(new Message { To = new Jid(variables.JID_Talk), Chatstate = Chatstate.composing, Type = MessageType.chat });
+            }
             else
+            {
                 Send_Button.IsEnabled = false;
+                variables.Xmpp.Send(new Message { To = new Jid(variables.JID_Talk), Chatstate = Chatstate.active, Type = MessageType.chat });
+            }
         }
 
         //Quand le component elipse_profil est chargé, alors il met en place l'avatar de l'utilisateur

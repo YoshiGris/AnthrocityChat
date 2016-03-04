@@ -71,9 +71,11 @@ namespace AnthrocityChat.Pages
 
                 if(!notsave)
                 {
-                    Items_Source.Login_Item login_item = new Items_Source.Login_Item { password = MDP_Box.Password, pseudo = Username_Box.Text, login_auto = (bool)AutoConnect_Switch.IsChecked };
+                    Items_Source.Login_Item login_item = new Items_Source.Login_Item { password = "blblblblbl", pseudo = Username_Box.Text, login_auto = (bool)AutoConnect_Switch.IsChecked };
                     string json_login = JsonConvert.SerializeObject(login_item);
                     System.IO.File.WriteAllText(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\anthro_chat.json", json_login);
+                    Properties.Settings.Default.Password = MDP_Box.Password;
+                    Properties.Settings.Default.Save();
                 }
 
                 Jid jid_user = new Jid(variables.ID_User + "@anthrocity.net");
@@ -108,8 +110,8 @@ namespace AnthrocityChat.Pages
                     String line = sr.ReadToEnd();
                     Items_Source.Login_Item deserialized_login = JsonConvert.DeserializeObject<Items_Source.Login_Item>(line);
                     Username_Box.Text = deserialized_login.pseudo;
-                    MDP_Box.Password = deserialized_login.password;
-                    if (deserialized_login.login_auto)
+                    MDP_Box.Password = Properties.Settings.Default.Password;
+                    if (deserialized_login.login_auto && Properties.Settings.Default.Password != "null")
                     {
                         Username_Box.IsEnabled = false; MDP_Box.IsEnabled = false;
                         AutoConnect_Switch.IsChecked = true; notsave = true;

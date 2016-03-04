@@ -33,6 +33,8 @@ namespace AnthrocityChat
 
             public Brush Color_Background { get; set; }
             public bool can_chat { get; set; }
+            public bool is_typing { get; set; }
+            public string text_pause { get; set; }
         }
 
         public class Message_Conv

@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AnthrocityChat.Pages"
         mc:Ignorable="d" Height="600" Width="295" BorderBrush="#FF0097FF" Loaded="Window_Loaded" WindowTitleBrush="#FF0097FF" Icon="/AnthrocityChat;component/Assets/Images/ico_AC.ico">
-    <!-- 380-->
+    <!-- 380 295-->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -109,7 +109,7 @@
     <Grid Background="White">
 
         <Grid x:Name="grid_conv" Margin="300,0,0,0" Visibility="Collapsed">
-            <ListView x:Name="chat_listview" Padding="0,0,0,55" BorderBrush="{x:Null}" ItemTemplate="{StaticResource ItemChat}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" SourceUpdated="chat_listview_SourceUpdated">
+            <ListView x:Name="chat_listview" Padding="0,0,0,60" BorderBrush="{x:Null}" ItemTemplate="{StaticResource ItemChat}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" SourceUpdated="chat_listview_SourceUpdated">
                 <ListView.ItemContainerStyle>
                     <Style TargetType="ListViewItem">
                         <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -119,11 +119,15 @@
                 </ListView.ItemContainerStyle>
             </ListView>
 
-            <Border Background="#990FA831" CornerRadius="3" Margin="10,0,10,10" VerticalAlignment="Bottom">
-                <TextBox x:Name="box_send" BorderBrush="{x:Null}" AcceptsReturn="False" Background="{x:Null}" IsEnabled="True" Padding="20,0,30,0" TextWrapping="Wrap" FontSize="16" Margin="0,10" Style="{StaticResource MP_Textbox}" Foreground="White" KeyDown="box_send_KeyDown" TextChanged="box_send_TextChanged">
+            <StackPanel VerticalAlignment="Bottom">
+                <TextBlock x:Name="IsTyping_Text" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="10,0,0,0" FontStyle="Italic"/>
+                <Border Background="#990FA831" CornerRadius="3" Margin="10,0,10,10" VerticalAlignment="Bottom">
+                    <TextBox x:Name="box_send" BorderBrush="{x:Null}" AcceptsReturn="False" Background="{x:Null}" IsEnabled="True" Padding="20,0,30,0" TextWrapping="Wrap" FontSize="16" Margin="0,10" Style="{StaticResource MP_Textbox}" Foreground="White" KeyDown="box_send_KeyDown" TextChanged="box_send_TextChanged">
 
-                </TextBox>
-            </Border>
+                    </TextBox>
+                </Border>
+
+            </StackPanel>
             <Button x:Name="Send_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"
                         IsEnabled="False"
                         ToolTip="Envoyer le message" VerticalAlignment="Bottom" HorizontalAlignment="Right" Click="Send_Button_Click">
@@ -199,7 +203,7 @@
                     <Metro:ToggleSwitch x:Name="StartupLaunch_Switch" Loaded="StartupLaunch_Switch_Loaded" Header="Démarrer automatiquement au démarrage de Windows ?" Foreground="White" ThumbIndicatorBrush="Gray" OnLabel="Oui" OffLabel="Non" OffSwitchBrush="#FFF44336" ThumbIndicatorDisabledBrush="White" OnSwitchBrush="#FF4CAF50" Unchecked="StartupLaunch_Switch_Unchecked" Checked="StartupLaunch_Switch_Checked"/>
                     
                     <TextBlock Text="Développer par Yoshi_Gris" HorizontalAlignment="Center" FontSize="18.667" Margin="0,15,0,0"/>
-                    <TextBlock Text="Version 0.1.2 - 2016" HorizontalAlignment="Center" FontSize="13.333" TextDecorations="Underline"/>
+                    <TextBlock Text="Version 0.2 - 2016" HorizontalAlignment="Center" FontSize="13.333" TextDecorations="Underline"/>
 
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,10,0,0">
                         <Button x:Name="Twitter_Button" Style="{StaticResource MaterialDesignFloatingActionMiniButton}"

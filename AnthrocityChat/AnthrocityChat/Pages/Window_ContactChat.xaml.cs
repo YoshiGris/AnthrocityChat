@@ -196,11 +196,10 @@ namespace AnthrocityChat.Pages
                             create_or_not = false;
                             if (item.status_jabber != pres.Show.ToString()) //S'il a été déjà rajouté dans la liste, alors on met à jour son statut !
                             {
-                                if(!item.can_chat)
+                                if(!item.can_chat && pres.From.User == actual_profil.Nickname)
                                 {
+                                    box_send.IsEnabled = true;
                                     item.list_conv.Add(new Items_Source.Message_Conv { message = "- Le furs est là ! :) -", align_message = HorizontalAlignment.Center, margin = new Thickness(20, 0, 20, 0), color_bg = new SolidColorBrush(Colors.DarkGreen), date = DateTime.Now.ToString() });
-                                    if (pres.From.User == actual_profil.Nickname)
-                                    { box_send.IsEnabled = true; }
                                 }
 
                                 switch (pres.Show.ToString())
@@ -529,5 +528,8 @@ namespace AnthrocityChat.Pages
 
         private void Github_Button_Click(object sender, RoutedEventArgs e)
         { System.Diagnostics.Process.Start("https://github.com/YoshiGris/AnthrocityChat"); }
+
+        private void Licence_Button_Click(object sender, RoutedEventArgs e)
+        { System.Diagnostics.Process.Start("https://github.com/YoshiGris/AnthrocityChat/blob/master/LICENSE.txt"); }
     }
 }

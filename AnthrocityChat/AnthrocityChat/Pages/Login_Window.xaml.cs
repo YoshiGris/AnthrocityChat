@@ -9,6 +9,9 @@ using System.Linq;
 using System.Net.Http;
 using System.Windows;
 using agsXMPP.Net;
+using System.Reflection;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AnthrocityChat.Pages
 {
@@ -74,7 +77,8 @@ namespace AnthrocityChat.Pages
                     Items_Source.Login_Item login_item = new Items_Source.Login_Item { password = "blblblblbl", pseudo = Username_Box.Text, login_auto = (bool)AutoConnect_Switch.IsChecked };
                     string json_login = JsonConvert.SerializeObject(login_item);
                     System.IO.File.WriteAllText(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\anthro_chat.json", json_login);
-                    Properties.Settings.Default.Password = MDP_Box.Password;
+
+                    Properties.Settings.Default.Password = Protect(MDP_Box.Password);
                     Properties.Settings.Default.Save();
                 }
 
@@ -107,11 +111,15 @@ namespace AnthrocityChat.Pages
             {
                 using (StreamReader sr = new StreamReader(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\anthro_chat.json"))
                 {
-                    String line = sr.ReadToEnd();
+                    String line = sr.ReadToEnd(); string mdp = Properties.Settings.Default.Password;
                     Items_Source.Login_Item deserialized_login = JsonConvert.DeserializeObject<Items_Source.Login_Item>(line);
                     Username_Box.Text = deserialized_login.pseudo;
-                    MDP_Box.Password = Properties.Settings.Default.Password;
-                    if (deserialized_login.login_auto && Properties.Settings.Default.Password != "null")
+                    try
+                    { MDP_Box.Password = Unprotect(Properties.Settings.Default.Password); }
+                    catch
+                    { mdp = "null"; }
+                    
+                    if (deserialized_login.login_auto && mdp != "null")
                     {
                         Username_Box.IsEnabled = false; MDP_Box.IsEnabled = false;
                         AutoConnect_Switch.IsChecked = true; notsave = true;
@@ -122,6 +130,22 @@ namespace AnthrocityChat.Pages
 
             }
 
+        }
+
+        public static string Protect(string str)
+        {
+            byte[] entropy = Encoding.ASCII.GetBytes(Assembly.GetExecutingAssembly().FullName);
+            byte[] data = Encoding.ASCII.GetBytes(str);
+            string protectedData = Convert.ToBase64String(ProtectedData.Protect(data, entropy, DataProtectionScope.CurrentUser));
+            return protectedData;
+        }
+
+        public static string Unprotect(string str)
+        {
+            byte[] protectedData = Convert.FromBase64String(str);
+            byte[] entropy = Encoding.ASCII.GetBytes(Assembly.GetExecutingAssembly().FullName);
+            string data = Encoding.ASCII.GetString(ProtectedData.Unprotect(protectedData, entropy, DataProtectionScope.CurrentUser));
+            return data;
         }
 
 

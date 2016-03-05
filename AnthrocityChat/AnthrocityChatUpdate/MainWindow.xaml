@@ -1,0 +1,24 @@
+﻿<Window x:Class="AnthrocityChatUpdate.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:Metro="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:local="clr-namespace:AnthrocityChatUpdate"
+        mc:Ignorable="d"
+        Title="Anthrocity Chat" Height="200" Width="300" WindowStyle="None" AllowsTransparency="True" ResizeMode="NoResize" Loaded="Window_Loaded">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="{Binding ActualHeight,ElementName=grid_update}"/>
+    </WindowChrome.WindowChrome>
+    
+    <Grid x:Name="grid_update" Background="#FF0097FF">
+        <TextBlock x:Name="icon_chat" Text="" FontSize="96" Foreground="#66004A7F" FontFamily="/AnthrocityChatUpdate;component/Assets/#Segoe MDL2 Assets" VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="-10,0,0,-15" />
+
+        <StackPanel VerticalAlignment="Center">
+            <TextBlock Text="Anthrocity Chat" Foreground="White" HorizontalAlignment="Center" FontSize="33.333" FontFamily="/AnthrocityChatUpdate;component/Assets/#Lovelo Black" VerticalAlignment="Center"/>
+            <Metro:ProgressRing x:Name="ring_connect" IsActive="True" Foreground="White" Margin="0,10,0,0" Width="40" />
+            <TextBlock x:Name="update_text" Text="Vérification de màj..." Foreground="White" HorizontalAlignment="Center" FontSize="16" FontFamily="Segoe UI Light" VerticalAlignment="Center"/>
+        </StackPanel>
+    </Grid>
+</Window>

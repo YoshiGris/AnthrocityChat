@@ -476,7 +476,7 @@ namespace AnthrocityChat.Pages
 
         //Si l'utilisateur allume le switch, alors l'application est rajoutée au démarrage de Windows
         private void StartupLaunch_Switch_Checked(object sender, RoutedEventArgs e)
-        { rkApp.SetValue("AC-Chat", System.Reflection.Assembly.GetExecutingAssembly().Location); }
+        { rkApp.SetValue("AC-Chat", System.Reflection.Assembly.GetExecutingAssembly().Location.Replace(@"soft\AnthrocityChat.exe", "") + "AnthrocityChatUpdate.exe"); }
 
         //Sinon, elle est enlevée du démarrage de Windows !
         private void StartupLaunch_Switch_Unchecked(object sender, RoutedEventArgs e)

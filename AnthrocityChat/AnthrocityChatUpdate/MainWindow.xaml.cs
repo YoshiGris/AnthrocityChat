@@ -38,21 +38,30 @@ namespace AnthrocityChatUpdate
             {
                 using (StreamReader sr = new StreamReader(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\version.anthro"))
                 {
-                    String actual_version = sr.ReadToEnd();
-                    HttpResponseMessage response = await client.GetAsync("http://furhub.yoshigris.fr/version.anthro");
-                    response.EnsureSuccessStatusCode();
-                    var version_site = await response.Content.ReadAsStringAsync();
+                    try
+                    {
+                        String actual_version = sr.ReadToEnd();
+                        HttpResponseMessage response = await client.GetAsync("http://furhub.yoshigris.fr/version.anthro");
+                        response.EnsureSuccessStatusCode();
+                        var version_site = await response.Content.ReadAsStringAsync();
 
-                    if(int.Parse(actual_version) > int.Parse(version_site) || int.Parse(actual_version) == int.Parse(version_site))
+                        if (int.Parse(actual_version) > int.Parse(version_site) || int.Parse(actual_version) == int.Parse(version_site))
+                        {
+                            Process.Start(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\soft\AnthrocityChat.exe");
+                            this.Close();
+                        }
+                        else
+                        {
+                            Directory.Delete(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\soft\", true);
+                            Update();
+                        }
+                    }
+                    catch
                     {
                         Process.Start(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\soft\AnthrocityChat.exe");
                         this.Close();
                     }
-                    else
-                    {
-                        Directory.Delete(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase.Replace("file:/", "").Replace(@"//", "")) + @"\soft\", true);
-                        Update();
-                    }
+
                 }
             }
             else

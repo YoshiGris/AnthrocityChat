@@ -28,13 +28,17 @@ namespace AnthrocityChat
             public Jid jid_user { get; set; }
             public ObservableCollection<Message_Conv> list_conv { get; set; }
             public SolidColorBrush Color_Status { get; set; }
+            public SolidColorBrush Background_Select_Color { get; set; }
             public System.Uri image_profil { get; set; }
+            public string Real_Name { get; set; }
             public Visibility elipse_white_visibility { get; set; }
 
             public Brush Color_Background { get; set; }
             public bool can_chat { get; set; }
             public bool is_typing { get; set; }
             public string text_pause { get; set; }
+
+            public string last_message { get; set; }
         }
 
         public class Message_Conv

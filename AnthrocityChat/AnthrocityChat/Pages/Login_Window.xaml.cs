@@ -92,7 +92,7 @@ namespace AnthrocityChat.Pages
                 variables.Xmpp.ClientLanguage = "fr";
                 variables.Xmpp.AutoPresence = true;
                 variables.Xmpp.SocketConnectionType = SocketConnectionType.Bosh;
-                variables.Xmpp.ConnectServer = "http://www.anthrocity.net:5280/http-bind/";
+                variables.Xmpp.ConnectServer = "https://www.anthrocity.net/http-bind/";
                 variables.Xmpp.KeepAlive = true; variables.Xmpp.UseSSL = true;
                 
                 variables.Xmpp.AutoResolveConnectServer = false; variables.Xmpp.AutoRoster = true;

@@ -8,7 +8,7 @@
         Title="Popup" Width="300" SizeToContent="Height" Topmost="True" ShowInTaskbar="False"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
-    <Border Background="#E5808080" CornerRadius="10" RenderTransformOrigin="0,1" MouseLeftButtonDown="Border_MouseLeftButtonDown">
+    <Border Background="#E5000000" CornerRadius="10" RenderTransformOrigin="0,1" MouseLeftButtonDown="Border_MouseLeftButtonDown">
         <Grid>
 
             <Ellipse Width="40" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Fill="White" Visibility="{Binding elipse_white_visibility}">
